@@ -31,7 +31,6 @@ ADD ./supervisord.conf /etc/supervisor/supervisord.conf
 
 # SHOUTcast 2 DNAS can not be "distributed" in any way, due to SHOUTcast's strict commercial license.
 # Users must download the files from the SHOUTcast web site themselves.
-
 VOLUME "/var/azuracast/servers/shoutcast2"
 
 # Download and build IceCast-KH
