@@ -36,12 +36,12 @@ VOLUME "/var/azuracast/servers/shoutcast2"
 # Download and build IceCast-KH
 WORKDIR /var/azuracast/servers/icecast2
 
-ENV ICECAST_KH_VERSION="2.4.0-kh10"
+ENV ICECAST_KH_VERSION="2.4.0-kh10-ac1"
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libxml2 \
         libxslt1-dev libvorbis-dev \
-    && wget https://github.com/karlheyes/icecast-kh/archive/icecast-${ICECAST_KH_VERSION}.tar.gz \
+    && wget https://github.com/CodeSteele/icecast-kh/archive/icecast-${ICECAST_KH_VERSION}.tar.gz \
     && tar --strip-components=1 -xzf icecast-${ICECAST_KH_VERSION}.tar.gz \
     && rm icecast-${ICECAST_KH_VERSION}.tar.gz \
     && ./configure \
