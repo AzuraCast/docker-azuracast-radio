@@ -41,9 +41,9 @@ ENV ICECAST_KH_VERSION="2.4.0-kh10"
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libxml2 \
         libxslt1-dev libvorbis-dev \
-    && wget https://github.com/karlheyes/icecast-kh/archive/icecast-${ICECAST_KH_VERSION}.tar.gz \
-    && tar --strip-components=1 -xzf icecast-${ICECAST_KH_VERSION}.tar.gz \
-    && rm icecast-${ICECAST_KH_VERSION}.tar.gz \
+    && wget https://github.com/AzuraCast/icecast-kh-ac/archive/master.tar.gz \
+    && tar --strip-components=1 -xzf master.tar.gz \
+    && rm master.tar.gz \
     && ./configure \
     && make \
     && make install
