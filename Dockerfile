@@ -48,10 +48,6 @@ RUN apt-get update \
     && make \
     && make install
 
-ADD ./error.mp3 /usr/local/share/icecast/web/error.mp3
-ADD ./status-json.xsl /usr/local/share/icecast/web/status-json.xsl
-ADD ./xml2json.xslt /usr/local/share/icecast/web/xml2json.xslt
-
 # Build LiquidSoap
 
 # For libfdk-aac-dev
