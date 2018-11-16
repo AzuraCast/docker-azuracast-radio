@@ -62,7 +62,7 @@ USER azuracast
 
 RUN opam init -a \
     && opam install -y taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.2.1 lame.0.3.3 vorbis.0.7.0 cry.0.6.0 \
-    opus.0.1.2 flac.0.1.2 liquidsoap.1.3.4
+    duppy.0.8.0 opus.0.1.2 flac.0.1.2 liquidsoap.1.3.4
 
 # Install the station-watcher app
 USER root
