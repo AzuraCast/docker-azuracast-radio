@@ -23,7 +23,7 @@ FROM ocaml/opam2:ubuntu-18.04-ocaml-4.07 AS liquidsoap
 
 WORKDIR /home/opam
 
-ARG opam_packages="taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.2.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.0 duppy.0.8.0 opus.0.1.2 flac.0.1.3 liquidsoap.1.3.4"
+ARG opam_packages="taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.2.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.0 duppy.0.8.0 opus.0.1.2 flac.0.1.3 ssl liquidsoap.1.3.4"
 
 USER root
 RUN mkdir -p /var/azuracast/servers/liquidsoap \
