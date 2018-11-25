@@ -3,13 +3,13 @@
 #
 FROM ubuntu:bionic AS icecast
 
-ARG ICECAST_KH_VERSION="2.4.0-kh10"
+ARG ICECAST_KH_VERSION="2.4.0-kh10-ac4"
 
 WORKDIR /root
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends wget libxml2 \
-        libxslt1-dev libvorbis-dev gcc pkg-config ca-certificates \
+        libxslt1-dev libvorbis-dev libcurl4-openssl-dev gcc pkg-config ca-certificates \
     && wget https://github.com/AzuraCast/icecast-kh-ac/archive/master.tar.gz \
     && tar --strip-components=1 -xzf master.tar.gz \
     && ./configure \
