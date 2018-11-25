@@ -9,7 +9,7 @@ WORKDIR /root
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends wget libxml2 \
-        libxslt1-dev libvorbis-dev libcurl4-openssl-dev gcc pkg-config ca-certificates \
+        libxslt1-dev libvorbis-dev libssl-dev libcurl4-openssl-dev gcc pkg-config ca-certificates \
     && wget https://github.com/AzuraCast/icecast-kh-ac/archive/master.tar.gz \
     && tar --strip-components=1 -xzf master.tar.gz \
     && ./configure \
