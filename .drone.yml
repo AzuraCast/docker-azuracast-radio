@@ -1,7 +1,7 @@
 pipeline:
   docker:
     image: plugins/docker
-    repo: azuracast/azuracast_stations
+    repo: azuracast/azuracast_radio
     tags:
      - latest
     secrets: [ docker_username, docker_password ]
