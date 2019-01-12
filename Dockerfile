@@ -21,7 +21,8 @@ WORKDIR /var/azuracast/servers/liquidsoap
 RUN opam depext -sn ${opam_packages} > /tmp/depexts; true
 
 # Actually build Liquidsoap in this image
-RUN opam depext -i ${opam_packages}
+RUN sudo apt-get update \
+    && opam depext -i ${opam_packages}
 
 #
 # Icecast Build Stage
