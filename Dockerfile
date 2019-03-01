@@ -99,13 +99,6 @@ RUN apt-get update \
     && cat /tmp/depexts | xargs apt-get install -q -y --no-install-recommends \
     && ln -s /var/azuracast/servers/liquidsoap/_opam/bin/liquidsoap /usr/local/bin/liquidsoap
 
-# Install the station-watcher app
-WORKDIR /var/azuracast/servers/station-watcher
-COPY ./station-watcher ./station-watcher
-
-RUN chown azuracast:azuracast ./station-watcher \
-    && chmod a+x ./station-watcher
-
 WORKDIR /root
 
 EXPOSE 9001
