@@ -57,8 +57,7 @@ RUN sed -i "s/^exit 101$/exit 0/" /usr/sbin/policy-rc.d
 # Create directories
 RUN mkdir -p /var/azuracast/servers/shoutcast2 \
     && mkdir -p /var/azuracast/servers/liquidsoap \
-    && mkdir -p /var/azuracast/servers/station-watcher \
-    && mkdir -p /var/azuracast/stations
+       /var/azuracast/stations /var/azuracast/www_tmp
 
 RUN adduser --home /var/azuracast --disabled-password --gecos "" azuracast \
     && chown -R azuracast:azuracast /var/azuracast
@@ -73,11 +72,7 @@ RUN mkdir -p /var/log/supervisor
 RUN apt-get update \
     && apt-get install -q -y supervisor
 
-ADD ./supervisord.conf /etc/supervisor/supervisord.conf
-
-# SHOUTcast 2 DNAS can not be "distributed" in any way, due to SHOUTcast's strict commercial license.
-# Users must download the files from the SHOUTcast web site themselves.
-VOLUME "/var/azuracast/servers/shoutcast2"
+COPY ./supervisord.conf /etc/supervisor/supervisord.conf
 
 # Import Icecast-KH from build container
 COPY --from=icecast /usr/local/bin/icecast /usr/local/bin/icecast
@@ -106,5 +101,7 @@ EXPOSE 8000-8500
 
 # Include radio services in PATH
 ENV PATH="${PATH}:/var/azuracast/servers/shoutcast2:/var/azuracast/servers/station-watcher"
+
+VOLUME ["/var/azuracast/servers/shoutcast2", "/var/azuracast/www_tmp"]
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
