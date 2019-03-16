@@ -35,7 +35,10 @@ FROM base AS build
 # Install build tools
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends \
-        build-essential libssl-dev libcurl4-openssl-dev bubblewrap unzip m4
+        build-essential libssl-dev libcurl4-openssl-dev bubblewrap unzip m4 software-properties-common \
+    && add-apt-repository -y ppa:avsm/ppa \
+    && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends ocaml opam
 
 # Build Icecast-KH-AC
 ARG ICECAST_KH_VERSION="2.4.0-kh10-ac4"
@@ -48,10 +51,6 @@ RUN tar --strip-components=1 -xzf master.tar.gz \
     && ./configure \
     && make \
     && make install
-
-ADD https://github.com/ocaml/opam/releases/download/2.0.3/opam-2.0.3-x86_64-linux /usr/bin/opam
-
-RUN chmod a+x /usr/bin/opam
 
 USER azuracast
 
@@ -77,7 +76,7 @@ COPY --from=build /usr/local/bin/icecast /usr/local/bin/icecast
 COPY --from=build /usr/local/share/icecast /usr/local/share/icecast
 
 # Import Liquidsoap from build container
-COPY --from=build --chown=azuracast:azuracast /var/azuracast/.opam /var/azuracast/.opam
+COPY --from=build --chown=azuracast:azuracast /var/azuracast/.opam/default /var/azuracast/.opam/default
 
 RUN ln -s /var/azuracast/.opam/default/bin/liquidsoap /usr/local/bin/liquidsoap
 
