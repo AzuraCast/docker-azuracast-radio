@@ -54,7 +54,7 @@ RUN tar --strip-components=1 -xzf master.tar.gz \
 
 USER azuracast
 
-ARG opam_packages="taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.2.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.1 flac.0.1.4 opus.0.1.2 duppy.0.8.0 ssl liquidsoap.1.3.6"
+ARG opam_packages="taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.2.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.1 flac.0.1.4 opus.0.1.2 duppy.0.8.0 ssl liquidsoap.1.3.7"
 
 RUN opam init --disable-sandboxing -a \
     && opam install -y ${opam_packages}
