@@ -1,0 +1,11 @@
+Package: *
+Pin: release v=19.04, -l=Ubuntu
+Pin-Priority: 10
+
+Package: libopus-dev
+Pin: release v=19.04, -l=Ubuntu
+Pin-Priority: 990
+
+Package: libopus0
+Pin: release v=19.04, -l=Ubuntu
+Pin-Priority: 990
