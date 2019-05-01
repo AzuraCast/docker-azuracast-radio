@@ -8,7 +8,12 @@ ENV TZ="UTC"
 
 RUN echo $TZ > /etc/timezone \
     # Avoid ERROR: invoke-rc.d: policy-rc.d denied execution of start.
-    && sed -i "s/^exit 101$/exit 0/" /usr/sbin/policy-rc.d 
+    && sed -i "s/^exit 101$/exit 0/" /usr/sbin/policy-rc.d
+
+# Use newer 19.04 sources to get a newer version of libopus-dev
+COPY disco.list /etc/apt/sources.list.d/disco.list
+COPY disco /etc/apt/preferences.d/disco
+RUN apt-cache policy libopus-dev
     
 # Common packages
 RUN apt-get update \
