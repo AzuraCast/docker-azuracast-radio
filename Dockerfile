@@ -1,11 +1,10 @@
 #
 # Base image
 #
-FROM ubuntu:bionic AS base
+FROM phusion/baseimage:0.11 AS base
 
 # Set time zone
 ENV TZ="UTC"
-
 RUN echo $TZ > /etc/timezone \
     # Avoid ERROR: invoke-rc.d: policy-rc.d denied execution of start.
     && sed -i "s/^exit 101$/exit 0/" /usr/sbin/policy-rc.d 
@@ -66,7 +65,8 @@ FROM base
 
 # Install Supervisor
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends supervisor \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends \
+    supervisor tmpreaper \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./supervisord.conf /etc/supervisor/supervisord.conf
@@ -85,7 +85,14 @@ EXPOSE 8000-8500
 
 # Include radio services in PATH
 ENV PATH="${PATH}:/var/azuracast/servers/shoutcast2"
-
 VOLUME ["/var/azuracast/servers/shoutcast2", "/var/azuracast/www_tmp"]
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+# Set up first-run scripts and runit services
+COPY ./runit/ /etc/service/
+RUN chmod +x /etc/service/*/run
+
+# Copy crontab
+COPY ./cron/ /etc/cron.d/
+RUN chmod -R 600 /etc/cron.d/*
+
+CMD ["/sbin/my_init"]
