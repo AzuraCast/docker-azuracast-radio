@@ -13,7 +13,7 @@ RUN echo $TZ > /etc/timezone \
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends \
     # Base packages
-    curl git ca-certificates \
+    curl git ca-certificates tzdata \
     # Icecast 
     libxml2 libxslt1-dev libvorbis-dev \
     # Liquidsoap
