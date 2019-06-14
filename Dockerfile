@@ -40,11 +40,11 @@ RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends ocaml opam
 
 # Build Icecast-KH-AC
-ARG ICECAST_KH_VERSION="2.4.0-kh10-ac5"
+ARG ICECAST_KH_VERSION="2.4.0-kh10-ac4"
 
 WORKDIR /tmp/install_icecast
 
-ADD https://github.com/AzuraCast/icecast-kh-ac/archive/master.tar.gz ./master.tar.gz
+ADD https://github.com/AzuraCast/icecast-kh-ac/archive/${ICECAST_KH_VERSION}.tar.gz ./master.tar.gz
 
 RUN tar --strip-components=1 -xzf master.tar.gz \
     && ./configure \
