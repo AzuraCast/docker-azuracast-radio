@@ -13,7 +13,7 @@ RUN echo $TZ > /etc/timezone \
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends \
     # Base packages
-    curl git ca-certificates tzdata \
+    curl git ca-certificates tzdata supervisor tmpreaper \
     # Icecast 
     libxml2 libxslt1-dev libvorbis-dev \
     # Liquidsoap
@@ -27,9 +27,14 @@ RUN mkdir -p /var/azuracast/servers/shoutcast2 /var/azuracast/stations /var/azur
     && chown -R azuracast:azuracast /var/azuracast
 
 #
-# Icecast/Liquidsoap builder image
+# Icecast build stage (for later copy)
 #
-FROM base AS build
+FROM azuracast/icecast-kh-ac:2.4.0-kh10-ac4 AS icecast
+
+#
+# Liquidsoap build stage
+#
+FROM base AS liquidsoap
 
 # Install build tools
 RUN apt-get update \
@@ -38,18 +43,6 @@ RUN apt-get update \
     && add-apt-repository -y ppa:avsm/ppa \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends ocaml opam
-
-# Build Icecast-KH-AC
-ARG ICECAST_KH_VERSION="2.4.0-kh10-ac4"
-
-WORKDIR /tmp/install_icecast
-
-ADD https://github.com/AzuraCast/icecast-kh-ac/archive/${ICECAST_KH_VERSION}.tar.gz ./master.tar.gz
-
-RUN tar --strip-components=1 -xzf master.tar.gz \
-    && ./configure \
-    && make \
-    && make install
 
 USER azuracast
 
@@ -64,19 +57,14 @@ RUN opam init --disable-sandboxing -a \
 FROM base
 
 # Install Supervisor
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends \
-    supervisor tmpreaper \
-    && rm -rf /var/lib/apt/lists/*
-
 COPY ./supervisord.conf /etc/supervisor/supervisord.conf
 
 # Import Icecast-KH from build container
-COPY --from=build /usr/local/bin/icecast /usr/local/bin/icecast
-COPY --from=build /usr/local/share/icecast /usr/local/share/icecast
+COPY --from=icecast /usr/local/bin/icecast /usr/local/bin/icecast
+COPY --from=icecast /usr/local/share/icecast /usr/local/share/icecast
 
 # Import Liquidsoap from build container
-COPY --from=build --chown=azuracast:azuracast /var/azuracast/.opam/default /var/azuracast/.opam/default
+COPY --from=liquidsoap --chown=azuracast:azuracast /var/azuracast/.opam/default /var/azuracast/.opam/default
 
 RUN ln -s /var/azuracast/.opam/default/bin/liquidsoap /usr/local/bin/liquidsoap
 
@@ -89,10 +77,9 @@ VOLUME ["/var/azuracast/servers/shoutcast2", "/var/azuracast/www_tmp"]
 
 # Set up first-run scripts and runit services
 COPY ./runit/ /etc/service/
-RUN chmod +x /etc/service/*/run
-
-# Copy crontab
 COPY ./cron/ /etc/cron.d/
-RUN chmod -R 600 /etc/cron.d/*
+
+RUN chmod +x /etc/service/*/run \
+    && chmod -R 600 /etc/cron.d/*
 
 CMD ["/sbin/my_init"]
