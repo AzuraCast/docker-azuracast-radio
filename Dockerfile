@@ -69,7 +69,7 @@ COPY --from=liquidsoap --chown=azuracast:azuracast /var/azuracast/.opam/default 
 RUN ln -s /var/azuracast/.opam/default/bin/liquidsoap /usr/local/bin/liquidsoap
 
 EXPOSE 9001
-EXPOSE 8000-8500
+EXPOSE 8000-8999
 
 # Include radio services in PATH
 ENV PATH="${PATH}:/var/azuracast/servers/shoutcast2"
