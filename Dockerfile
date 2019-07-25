@@ -29,7 +29,7 @@ RUN mkdir -p /var/azuracast/servers/shoutcast2 /var/azuracast/stations /var/azur
 #
 # Icecast build stage (for later copy)
 #
-FROM azuracast/icecast-kh-ac:2.4.0-kh10-ac4 AS icecast
+FROM azuracast/icecast-kh-ac:latest AS icecast
 
 #
 # Liquidsoap build stage
