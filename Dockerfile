@@ -46,10 +46,10 @@ RUN apt-get update \
 
 USER azuracast
 
-ARG opam_packages="samplerate.0.1.4 taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.2.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.1 flac.0.1.4 opus.0.1.2 duppy.0.8.0 ssl liquidsoap.1.3.7"
+RUN opam init --disable-sandboxing -a --bare && opam switch create 4.08.0 
 
-RUN opam init --disable-sandboxing -a \
-    && opam install -y ${opam_packages}
+ARG opam_packages="samplerate.0.1.4 taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.3.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.1 flac.0.1.5 opus.0.1.3 duppy.0.8.0 ssl liquidsoap.1.4.0"
+RUN opam install -y ${opam_packages}
 
 #
 # Main image
@@ -64,9 +64,9 @@ COPY --from=icecast /usr/local/bin/icecast /usr/local/bin/icecast
 COPY --from=icecast /usr/local/share/icecast /usr/local/share/icecast
 
 # Import Liquidsoap from build container
-COPY --from=liquidsoap --chown=azuracast:azuracast /var/azuracast/.opam/default /var/azuracast/.opam/default
+COPY --from=liquidsoap --chown=azuracast:azuracast /var/azuracast/.opam/4.08.0 /var/azuracast/.opam/4.08.0
 
-RUN ln -s /var/azuracast/.opam/default/bin/liquidsoap /usr/local/bin/liquidsoap
+RUN ln -s /var/azuracast/.opam/4.08.0/bin/liquidsoap /usr/local/bin/liquidsoap
 
 EXPOSE 9001
 EXPOSE 8000-8999
