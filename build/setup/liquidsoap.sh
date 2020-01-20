@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+source /bd_build/buildconfig
+set -x
+
+# Only install Liquidsoap deps (Liquidsoap build is handled by another container).
+$minimal_apt_get_install libfaad-dev libfdk-aac-dev libflac-dev libmad0-dev libmp3lame-dev libogg-dev \
+    libopus-dev libpcre3-dev libtag1-dev libsamplerate0-dev
