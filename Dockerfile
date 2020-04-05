@@ -6,6 +6,10 @@ FROM ubuntu:bionic AS base
 # Set time zone
 ENV TZ="UTC"
 
+# Add source for libopus from Ubuntu 19.04
+COPY ./disco.list /etc/apt/sources.list.d/disco.list
+COPY ./disco /etc/apt/preferences.d/disco
+
 # Run base build process
 COPY ./build/ /bd_build
 
