@@ -1,2 +1,2 @@
-deb http://archive.ubuntu.com/ubuntu/ disco main restricted universe multiverse
-deb-src http://archive.ubuntu.com/ubuntu/ disco main restricted universe multiverse
+deb http://old-releases.ubuntu.com/ubuntu/ disco main restricted universe multiverse
+deb-src http://old-releases.ubuntu.com/ubuntu/ disco main restricted universe multiverse
