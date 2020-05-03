@@ -19,7 +19,7 @@ RUN chmod a+x /bd_build/*.sh \
 #
 # Icecast build stage (for later copy)
 #
-FROM azuracast/icecast-kh-ac:2.4.0-kh13-ac2 AS icecast
+FROM azuracast/icecast-kh-ac:2.4.0-kh14-ac1 AS icecast
 
 #
 # Liquidsoap build stage
@@ -30,14 +30,22 @@ FROM base AS liquidsoap
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends \
         build-essential libssl-dev libcurl4-openssl-dev bubblewrap unzip m4 software-properties-common \
-        ocaml opam
+        ocaml opam \
+        autoconf automake
 
 USER azuracast
 
 RUN opam init --disable-sandboxing -a --bare && opam switch create ocaml-system.4.08.1 
 
-ARG opam_packages="samplerate.0.1.4 taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.3.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.1 flac.0.1.5 opus.0.1.3 duppy.0.8.0 ssl liquidsoap.1.4.1"
+ARG opam_packages="samplerate.0.1.4 taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.3.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.1 flac.0.1.5 opus.0.1.3 duppy.0.8.0 ssl"
 RUN opam install -y ${opam_packages}
+
+# Pin specific commit of Liquidsoap
+RUN cd ~/ \
+    && git clone --recursive https://github.com/savonet/liquidsoap.git \
+    && cd liquidsoap \
+    && git checkout 1.4.2 \
+    && opam install -y .
 
 #
 # Main image
