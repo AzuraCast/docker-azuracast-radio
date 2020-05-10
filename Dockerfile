@@ -35,7 +35,7 @@ RUN apt-get update \
 
 USER azuracast
 
-ARG opam_packages="samplerate.0.1.4 taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.3.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.1 flac.0.1.5 opus.0.1.3 duppy.0.8.0 ssl liquidsoap.1.4.2"
+ARG opam_packages="ffmpeg.0.4.1 samplerate.0.1.4 taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.3.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.1 flac.0.1.5 opus.0.1.3 duppy.0.8.0 ssl liquidsoap.1.4.2"
 
 RUN opam init --disable-sandboxing -a --bare && opam switch create ocaml-system.4.08.1 
 RUN opam install -y ${opam_packages}
