@@ -47,7 +47,7 @@ RUN opam install -y ${opam_packages}
 RUN cd ~/ \
      && git clone --recursive https://github.com/savonet/liquidsoap.git \
     && cd liquidsoap \
-    && git checkout 1.4.3 \
+    && git checkout v1.4.3-pre-release \
     && opam install -y .
 
 #
