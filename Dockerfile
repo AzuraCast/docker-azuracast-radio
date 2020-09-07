@@ -27,17 +27,18 @@ FROM azuracast/icecast-kh-ac:2.4.0-kh15-ac1 AS icecast
 FROM base AS liquidsoap
 
 # Install build tools
+# Install build tools
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends \
         build-essential libssl-dev libcurl4-openssl-dev bubblewrap unzip m4 software-properties-common \
-        ocaml opam \
+        ocaml opam ladspa-sdk libsoundtouch-dev \
         autoconf automake
 
 USER azuracast
 
 ARG opam_packages="ffmpeg.0.4.1 samplerate.0.1.4 taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.3.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.1 flac.0.1.5 opus.0.1.3 duppy.0.8.0 ssl"
 
-RUN opam init --disable-sandboxing -a --bare && opam switch create ocaml-system.4.08.1 
+RUN opam init --disable-sandboxing -a --bare && opam switch create ocaml-system.4.08.1
 RUN opam install -y ${opam_packages}
 
 # Comment if pinning a specific commig
@@ -48,7 +49,7 @@ RUN cd ~/ \
      && git clone --recursive https://github.com/savonet/liquidsoap.git \
     && cd liquidsoap \
     && git checkout 3075878fc99d4e41f2daf5403c4e2f7539960e1b \
-    && opam install -y .
+    && opam install -y . ladspa lastfm soundtouch
 
 #
 # Main image
