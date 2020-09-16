@@ -41,7 +41,7 @@ RUN opam init --disable-sandboxing -a --bare && opam switch create ocaml-system.
 RUN cd ~/ \
      && git clone --recursive https://github.com/savonet/liquidsoap.git \
     && cd liquidsoap \
-    && git checkout 3075878fc99d4e41f2daf5403c4e2f7539960e1b \
+    && git checkout b20048070989d65a1d823c1e00435ef1a5744e4f \
     && opam pin add --no-action liquidsoap .
 
 ARG opam_packages="ffmpeg.0.4.1 samplerate.0.1.4 taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.3.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.1 flac.0.1.5 opus.0.1.3 duppy.0.8.0 ssl liquidsoap"
