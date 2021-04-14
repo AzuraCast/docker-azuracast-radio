@@ -6,6 +6,8 @@ on :
       - ci-testing
       - main
       - stable
+    tags :
+      - '*'
   schedule :
     - cron : '0 2 * * 0' # Weekly on Sundays at 02:00
 
@@ -36,23 +38,24 @@ jobs :
           username : ${{ github.repository_owner }}
           password : ${{ secrets.GITHUB_TOKEN }}
 
-      - name : Determine Tag Name
-        id : tag
-        run : |
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          if [ $BRANCH_NAME == 'main' ]; then
-            BRANCH_NAME="latest"
-          fi
-
-          echo "::set-output name=TAG::${BRANCH_NAME}"
+      - name : Build Docker Metadata
+        id : meta
+        uses : crazy-max/ghaction-docker-meta@v2
+        with :
+          images : |
+            azuracast/azuracast_radio
+            ghcr.io/azuracast/radio
+          tags : |
+            type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+            type=ref,event=branch
+            type=semver,pattern={{version}}
 
       - name : Publish to Docker Hub
         uses : docker/build-push-action@v2
         with :
-          context: .
-          # platforms: linux/amd64,linux/arm64
-          cache-from: type=registry,ref=azuracast/azuracast_radio:${{ steps.tag.outputs.TAG }}
-          tags : |
-            azuracast/azuracast_radio:${{ steps.tag.outputs.TAG }}
-            ghcr.io/azuracast/radio:${{ steps.tag.outputs.TAG }}
+          context : .
+          # platforms : linux/amd64,linux/arm64
+          cache-from : type=registry,ref=azuracast/azuracast_radio:latest
           push : true
+          tags : ${{ steps.meta.outputs.tags }}
+          labels : ${{ steps.meta.outputs.labels }}
