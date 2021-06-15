@@ -68,4 +68,4 @@ EXPOSE 8000-8999
 ENV PATH="${PATH}:/var/azuracast/servers/shoutcast2"
 VOLUME ["/var/azuracast/servers/shoutcast2", "/var/azuracast/www_tmp"]
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD ["/usr/local/bin/my_init"]
