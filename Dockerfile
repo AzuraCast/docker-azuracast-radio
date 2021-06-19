@@ -35,16 +35,17 @@ RUN apt-get update \
 
 USER azuracast
 
-RUN opam init --disable-sandboxing -a --bare && opam switch create ocaml-system.4.08.1
+RUN opam init --disable-sandboxing -a --bare && opam switch create 4.12.0
 
 # Uncomment to Pin specific commit of Liquidsoap
 RUN cd ~/ \
      && git clone --recursive https://github.com/savonet/liquidsoap.git \
     && cd liquidsoap \
     && git checkout 6fc002dd8c27ea4d6849ac3078662d53fd484106 \
+    && opam pin add --no-action ffmpeg https://github.com/savonet/ocaml-ffmpeg.git#a5d6effd5fe9e53689ac45a620f9349a79e14e78 \
     && opam pin add --no-action liquidsoap .
 
-ARG opam_packages="ladspa.0.2.0 ffmpeg.0.4.3 samplerate.0.1.5 taglib.0.3.6 mad.0.5.0 faad.0.5.0 fdkaac.0.3.2 lame.0.3.4 vorbis.0.8.0 cry.0.6.5 flac.0.3.0 opus.0.2.0 duppy.0.9.0 ssl liquidsoap"
+ARG opam_packages="ladspa.0.2.0 samplerate.0.1.5 taglib.0.3.6 mad.0.5.0 faad.0.5.0 fdkaac.0.3.2 lame.0.3.4 vorbis.0.8.0 cry.0.6.5 flac.0.3.0 opus.0.2.0 duppy.0.9.0 ocurl.0.9.1 ffmpeg.1.0.0-beta1 ssl liquidsoap"
 RUN opam install -y ${opam_packages}
 
 #
