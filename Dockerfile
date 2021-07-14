@@ -41,11 +41,10 @@ RUN opam init --disable-sandboxing -a --bare && opam switch create 4.12.0
 RUN cd ~/ \
      && git clone --recursive https://github.com/savonet/liquidsoap.git \
     && cd liquidsoap \
-    && git checkout 6fc002dd8c27ea4d6849ac3078662d53fd484106 \
-    && opam pin add --no-action ffmpeg https://github.com/savonet/ocaml-ffmpeg.git#a5d6effd5fe9e53689ac45a620f9349a79e14e78 \
+    && git checkout f0ec18b495a576b84dc9dfa74e85ec5d15208dbb \
     && opam pin add --no-action liquidsoap .
 
-ARG opam_packages="ladspa.0.2.0 samplerate.0.1.5 taglib.0.3.6 mad.0.5.0 faad.0.5.0 fdkaac.0.3.2 lame.0.3.4 vorbis.0.8.0 cry.0.6.5 flac.0.3.0 opus.0.2.0 duppy.0.9.0 ocurl.0.9.1 ffmpeg.1.0.0-beta1 ssl liquidsoap"
+ARG opam_packages="ladspa.0.2.0 ffmpeg.1.0.0~beta1 samplerate.0.1.5 taglib.0.3.6 mad.0.5.0 faad.0.5.0 fdkaac.0.3.2 lame.0.3.4 vorbis.0.8.0 cry.0.6.5 flac.0.3.0 opus.0.2.0 duppy.0.9.2 ocurl.0.9.1 ssl liquidsoap"
 RUN opam install -y ${opam_packages}
 
 #
@@ -58,9 +57,9 @@ COPY --from=icecast /usr/local/bin/icecast /usr/local/bin/icecast
 COPY --from=icecast /usr/local/share/icecast /usr/local/share/icecast
 
 # Import Liquidsoap from build container
-COPY --from=liquidsoap --chown=azuracast:azuracast /var/azuracast/.opam/ocaml-system.4.08.1 /var/azuracast/.opam/ocaml-system.4.08.1
+COPY --from=liquidsoap --chown=azuracast:azuracast /var/azuracast/.opam/4.12.0 /var/azuracast/.opam/4.12.0
 
-RUN ln -s /var/azuracast/.opam/ocaml-system.4.08.1/bin/liquidsoap /usr/local/bin/liquidsoap
+RUN ln -s /var/azuracast/.opam/4.12.0/bin/liquidsoap /usr/local/bin/liquidsoap
 
 EXPOSE 9001
 EXPOSE 8000-8999
