@@ -4,9 +4,9 @@ on :
   workflow_dispatch :
   push :
     branches :
-      - ci-testing
       - main
       - stable
+      - 'test/*'
     tags :
       - '*'
   schedule :
