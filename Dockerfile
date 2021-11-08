@@ -30,21 +30,21 @@ FROM base AS liquidsoap
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends \
         build-essential libssl-dev libcurl4-openssl-dev bubblewrap unzip m4 software-properties-common \
-        ocaml opam \
+        ocaml opam ffmpeg \
         autoconf automake
 
 USER azuracast
 
-RUN opam init --disable-sandboxing -a --bare && opam switch create ocaml-system.4.08.1 
+RUN opam init --disable-sandboxing -a --bare && opam switch create 4.12.0
 
 # Uncomment to Pin specific commit of Liquidsoap
 RUN cd ~/ \
      && git clone --recursive https://github.com/savonet/liquidsoap.git \
     && cd liquidsoap \
-    && git checkout 75d530c86bf638e3c50c08b7802d92270288e31b \
+    && git checkout 43aa734dd37595e991ad7d8d9b8560e7d47c19fe \
     && opam pin add --no-action liquidsoap .
 
-ARG opam_packages="ladspa.0.1.5 ffmpeg.0.4.3 samplerate.0.1.4 taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.3.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.1 flac.0.1.5 opus.0.1.3 duppy.0.8.0 ssl liquidsoap"
+ARG opam_packages="ladspa.0.2.0 ffmpeg.1.0.1 ffmpeg-avutil.1.0.1 ffmpeg-avcodec.1.0.1 ffmpeg-avdevice.1.0.1 ffmpeg-av.1.0.1 ffmpeg-avfilter.1.0.1 ffmpeg-swresample.1.0.1 ffmpeg-swscale.1.0.1 frei0r.0.1.2 samplerate.0.1.6 taglib.0.3.6 mad.0.5.0 faad.0.5.0 fdkaac.0.3.2 lame.0.3.4 vorbis.0.8.0 cry.0.6.5 flac.0.3.0 opus.0.2.0 dtools.0.4.4 duppy.0.9.2 ocurl.0.9.1 ssl liquidsoap"
 RUN opam install -y ${opam_packages}
 
 #
@@ -57,9 +57,9 @@ COPY --from=icecast /usr/local/bin/icecast /usr/local/bin/icecast
 COPY --from=icecast /usr/local/share/icecast /usr/local/share/icecast
 
 # Import Liquidsoap from build container
-COPY --from=liquidsoap --chown=azuracast:azuracast /var/azuracast/.opam/ocaml-system.4.08.1 /var/azuracast/.opam/ocaml-system.4.08.1
+COPY --from=liquidsoap --chown=azuracast:azuracast /var/azuracast/.opam/4.12.0 /var/azuracast/.opam/4.12.0
 
-RUN ln -s /var/azuracast/.opam/ocaml-system.4.08.1/bin/liquidsoap /usr/local/bin/liquidsoap
+RUN ln -s /var/azuracast/.opam/4.12.0/bin/liquidsoap /usr/local/bin/liquidsoap
 
 EXPOSE 9001
 EXPOSE 8000-8999
