@@ -41,7 +41,7 @@ RUN opam init --disable-sandboxing -a --bare && opam switch create 4.12.0
 RUN cd ~/ \
      && git clone --recursive https://github.com/savonet/liquidsoap.git \
     && cd liquidsoap \
-    && git checkout bd9a2e3531ec03bae4f2812b6d83bdacf2277f0c \
+    && git checkout 43aa734dd37595e991ad7d8d9b8560e7d47c19fe \
     && opam pin add --no-action liquidsoap .
 
 ARG opam_packages="ladspa.0.2.0 ffmpeg.1.0.1 ffmpeg-avutil.1.0.1 ffmpeg-avcodec.1.0.1 ffmpeg-avdevice.1.0.1 ffmpeg-av.1.0.1 ffmpeg-avfilter.1.0.1 ffmpeg-swresample.1.0.1 ffmpeg-swscale.1.0.1 frei0r.0.1.2 samplerate.0.1.6 taglib.0.3.6 mad.0.5.0 faad.0.5.0 fdkaac.0.3.2 lame.0.3.4 vorbis.0.8.0 cry.0.6.5 flac.0.3.0 opus.0.2.0 dtools.0.4.4 duppy.0.9.2 ocurl.0.9.1 ssl liquidsoap"
