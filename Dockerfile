@@ -19,7 +19,7 @@ RUN chmod a+x /bd_build/*.sh \
 #
 # Icecast build stage (for later copy)
 #
-FROM azuracast/icecast-kh-ac:2.4.0-kh15-ac1 AS icecast
+FROM ghcr.io/azuracast/icecast-kh-ac:latest AS icecast
 
 #
 # Liquidsoap build stage
