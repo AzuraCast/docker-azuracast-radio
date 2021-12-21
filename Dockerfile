@@ -1,5 +1,11 @@
+
 #
-# Base image
+# Icecast build stage (for later copy)
+#
+FROM ghcr.io/azuracast/icecast-kh-ac:latest AS icecast
+
+#
+# Common base image
 #
 FROM ubuntu:focal AS base
 
@@ -17,17 +23,11 @@ RUN chmod a+x /bd_build/*.sh \
     && rm -rf /bd_build
 
 #
-# Icecast build stage (for later copy)
+# AMD64 Liquidsoap Build Stage
 #
-FROM ghcr.io/azuracast/icecast-kh-ac:latest AS icecast
+FROM base AS liquidsoap_amd64
 
-#
-# Liquidsoap build stage
-#
-FROM base AS liquidsoap
-
-# Run base build process
-COPY ./liquidsoap_build/ /ls_build
+COPY ./liquidsoap_amd64/ /ls_build
 
 RUN chmod a+x /ls_build/*.sh \
     && bash /ls_build/build.sh \
@@ -35,18 +35,33 @@ RUN chmod a+x /ls_build/*.sh \
     && rm -rf /ls_build
 
 #
-# Main image
+# AMD64 Build Stage
 #
-FROM base
+FROM base AS build_amd64
+
+COPY --from=liquidsoap_amd64 --chown=azuracast:azuracast /var/azuracast/.opam/4.12.0 /var/azuracast/.opam/4.12.0
+RUN ln -s /var/azuracast/.opam/4.12.0/bin/liquidsoap /usr/local/bin/liquidsoap
+
+#
+# ARM64 Build Stage
+#
+FROM base AS build_arm64
+
+RUN apt-get update \
+    && wget -O /tmp/liquidsoap.deb "https://github.com/savonet/liquidsoap/releases/download/v2.0.1/liquidsoap_2.0.1-ubuntu-focal-1_arm64.deb" \
+    && dpkg -i /tmp/liquidsoap.deb \
+    && apt-get install -y -f --no-install-recommends \
+    && rm -f /tmp/liquidsoap.deb \ 
+    && ln -s /usr/bin/liquidsoap /usr/local/bin/liquidsoap
+
+#
+# Final image
+#
+FROM build_${TARGETARCH} AS final
 
 # Import Icecast-KH from build container
 COPY --from=icecast /usr/local/bin/icecast /usr/local/bin/icecast
 COPY --from=icecast /usr/local/share/icecast /usr/local/share/icecast
-
-# Import Liquidsoap from build container
-COPY --from=liquidsoap --chown=azuracast:azuracast /var/azuracast/.opam/4.12.0 /var/azuracast/.opam/4.12.0
-
-RUN ln -s /var/azuracast/.opam/4.12.0/bin/liquidsoap /usr/local/bin/liquidsoap
 
 EXPOSE 9001
 EXPOSE 8000-8999
