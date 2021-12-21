@@ -26,26 +26,13 @@ FROM ghcr.io/azuracast/icecast-kh-ac:latest AS icecast
 #
 FROM base AS liquidsoap
 
-# Install build tools
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends \
-        build-essential libssl-dev libcurl4-openssl-dev bubblewrap unzip m4 software-properties-common \
-        ocaml opam ffmpeg \
-        autoconf automake
+# Run base build process
+COPY ./liquidsoap_build/ /ls_build
 
-USER azuracast
-
-RUN opam init --disable-sandboxing -a --bare && opam switch create 4.12.0
-
-# Uncomment to Pin specific commit of Liquidsoap
-RUN cd ~/ \
-     && git clone --recursive https://github.com/savonet/liquidsoap.git \
-    && cd liquidsoap \
-    && git checkout 948275a22ecfd118b691613ffe6d4a87db9144e8 \
-    && opam pin add --no-action liquidsoap .
-
-ARG opam_packages="ladspa.0.2.0 ffmpeg.1.1.0 ffmpeg-avutil.1.1.0 ffmpeg-avcodec.1.1.0 ffmpeg-avdevice.1.1.0 ffmpeg-av.1.1.0 ffmpeg-avfilter.1.1.0 ffmpeg-swresample.1.1.0 ffmpeg-swscale.1.1.0 frei0r.0.1.2 samplerate.0.1.6 taglib.0.3.6 mad.0.5.0 faad.0.5.0 fdkaac.0.3.2 lame.0.3.4 vorbis.0.8.0 cry.0.6.5 flac.0.3.0 opus.0.2.0 dtools.0.4.4 duppy.0.9.2 ocurl.0.9.1 ssl liquidsoap"
-RUN opam install -y ${opam_packages}
+RUN chmod a+x /ls_build/*.sh \
+    && bash /ls_build/build.sh \
+    && sudo -u azuracast bash /ls_build/build_as_azuracast.sh \
+    && rm -rf /ls_build
 
 #
 # Main image
