@@ -7,7 +7,7 @@ opam init --disable-sandboxing -a --bare && opam switch create 4.12.0
 # Pin specific commit of Liquidsoap
 git clone --recursive https://github.com/savonet/liquidsoap.git /tmp/liquidsoap
 cd /tmp/liquidsoap
-git checkout 650094360587dddb502f7caced099c99d6bdb12f
+git checkout 7bb1b39503ff4738f7ec98f82643ef31e6d4c94c
 opam pin add --no-action liquidsoap .
 
 git clone --recursive https://github.com/savonet/ocaml-ffmpeg.git /tmp/ocaml-ffmpeg
