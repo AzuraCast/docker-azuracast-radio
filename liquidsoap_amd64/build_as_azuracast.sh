@@ -7,20 +7,8 @@ opam init --disable-sandboxing -a --bare && opam switch create 4.12.0
 # Pin specific commit of Liquidsoap
 git clone --recursive https://github.com/savonet/liquidsoap.git /tmp/liquidsoap
 cd /tmp/liquidsoap
-git checkout 7bb1b39503ff4738f7ec98f82643ef31e6d4c94c
+git checkout 9e28fbccaff15e715940a9011dbe13782cfa8db3
 opam pin add --no-action liquidsoap .
-
-git clone --recursive https://github.com/savonet/ocaml-ffmpeg.git /tmp/ocaml-ffmpeg
-cd /tmp/ocaml-ffmpeg
-git checkout 5b0ab162f977c25d51915a5b5019e03c33e6b63d
-opam pin add --no-action ffmpeg .
-opam pin add --no-action ffmpeg-avutil .
-opam pin add --no-action ffmpeg-avcodec .
-opam pin add --no-action ffmpeg-avdevice .
-opam pin add --no-action ffmpeg-av .
-opam pin add --no-action ffmpeg-avfilter .
-opam pin add --no-action ffmpeg-swresample .
-opam pin add --no-action ffmpeg-swscale .
 
 opam install -y ladspa.0.2.0 ffmpeg.1.1.1 ffmpeg-avutil.1.1.1 ffmpeg-avcodec.1.1.1 ffmpeg-avdevice.1.1.1 \
     ffmpeg-av.1.1.1 ffmpeg-avfilter.1.1.1 ffmpeg-swresample.1.1.1 ffmpeg-swscale.1.1.1 frei0r.0.1.2 \

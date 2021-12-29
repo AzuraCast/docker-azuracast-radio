@@ -48,7 +48,7 @@ RUN ln -s /var/azuracast/.opam/4.12.0/bin/liquidsoap /usr/local/bin/liquidsoap
 FROM base AS build_arm64
 
 RUN apt-get update \
-    && wget -O /tmp/liquidsoap.deb "https://github.com/savonet/liquidsoap/releases/download/v2.0.1/liquidsoap_2.0.1-ubuntu-focal-1_arm64.deb" \
+    && wget -O /tmp/liquidsoap.deb "https://github.com/savonet/liquidsoap/releases/download/v2.0.2/liquidsoap_2.0.2-ubuntu-focal-1_arm64.deb" \
     && dpkg -i /tmp/liquidsoap.deb \
     && apt-get install -y -f --no-install-recommends \
     && rm -f /tmp/liquidsoap.deb \ 
