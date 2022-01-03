@@ -7,7 +7,7 @@ opam init --disable-sandboxing -a --bare && opam switch create 4.12.0
 # Pin specific commit of Liquidsoap
 git clone --recursive https://github.com/savonet/liquidsoap.git /tmp/liquidsoap
 cd /tmp/liquidsoap
-git checkout 9e28fbccaff15e715940a9011dbe13782cfa8db3
+git checkout 7d209e52e62bd0f0a59195fb4921e400de5ae97b
 opam pin add --no-action liquidsoap .
 
 opam install -y ladspa.0.2.0 ffmpeg.1.1.1 ffmpeg-avutil.1.1.1 ffmpeg-avcodec.1.1.1 ffmpeg-avdevice.1.1.1 \
