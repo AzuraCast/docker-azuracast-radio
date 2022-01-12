@@ -1,5 +1,11 @@
+
 #
-# Base image
+# Icecast build stage (for later copy)
+#
+FROM ghcr.io/azuracast/icecast-kh-ac:latest AS icecast
+
+#
+# Common base image
 #
 FROM ubuntu:focal AS base
 
@@ -17,49 +23,45 @@ RUN chmod a+x /bd_build/*.sh \
     && rm -rf /bd_build
 
 #
-# Icecast build stage (for later copy)
+# AMD64 Liquidsoap Build Stage
 #
-FROM azuracast/icecast-kh-ac:2.4.0-kh15-ac1 AS icecast
+FROM base AS liquidsoap_amd64
+
+COPY ./liquidsoap_amd64/ /ls_build
+
+RUN chmod a+x /ls_build/*.sh \
+    && bash /ls_build/build.sh \
+    && sudo -u azuracast bash /ls_build/build_as_azuracast.sh \
+    && rm -rf /ls_build
 
 #
-# Liquidsoap build stage
+# AMD64 Build Stage
 #
-FROM base AS liquidsoap
+FROM base AS build_amd64
 
-# Install build tools
+COPY --from=liquidsoap_amd64 --chown=azuracast:azuracast /var/azuracast/.opam/4.12.0 /var/azuracast/.opam/4.12.0
+RUN ln -s /var/azuracast/.opam/4.12.0/bin/liquidsoap /usr/local/bin/liquidsoap
+
+#
+# ARM64 Build Stage
+#
+FROM base AS build_arm64
+
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends \
-        build-essential libssl-dev libcurl4-openssl-dev bubblewrap unzip m4 software-properties-common \
-        ocaml opam \
-        autoconf automake
-
-USER azuracast
-
-RUN opam init --disable-sandboxing -a --bare && opam switch create ocaml-system.4.08.1 
-
-# Uncomment to Pin specific commit of Liquidsoap
-RUN cd ~/ \
-     && git clone --recursive https://github.com/savonet/liquidsoap.git \
-    && cd liquidsoap \
-    && git checkout 75d530c86bf638e3c50c08b7802d92270288e31b \
-    && opam pin add --no-action liquidsoap .
-
-ARG opam_packages="ladspa.0.1.5 ffmpeg.0.4.3 samplerate.0.1.4 taglib.0.3.3 mad.0.4.5 faad.0.4.0 fdkaac.0.3.1 lame.0.3.3 vorbis.0.7.1 cry.0.6.1 flac.0.1.5 opus.0.1.3 duppy.0.8.0 ssl liquidsoap"
-RUN opam install -y ${opam_packages}
+    && wget -O /tmp/liquidsoap.deb "https://github.com/savonet/liquidsoap/releases/download/v2.0.2/liquidsoap_2.0.2-ubuntu-focal-1_arm64.deb" \
+    && dpkg -i /tmp/liquidsoap.deb \
+    && apt-get install -y -f --no-install-recommends \
+    && rm -f /tmp/liquidsoap.deb \ 
+    && ln -s /usr/bin/liquidsoap /usr/local/bin/liquidsoap
 
 #
-# Main image
+# Final image
 #
-FROM base
+FROM build_${TARGETARCH} AS final
 
 # Import Icecast-KH from build container
 COPY --from=icecast /usr/local/bin/icecast /usr/local/bin/icecast
 COPY --from=icecast /usr/local/share/icecast /usr/local/share/icecast
-
-# Import Liquidsoap from build container
-COPY --from=liquidsoap --chown=azuracast:azuracast /var/azuracast/.opam/ocaml-system.4.08.1 /var/azuracast/.opam/ocaml-system.4.08.1
-
-RUN ln -s /var/azuracast/.opam/ocaml-system.4.08.1/bin/liquidsoap /usr/local/bin/liquidsoap
 
 EXPOSE 9001
 EXPOSE 8000-8999
