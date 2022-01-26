@@ -2,7 +2,7 @@
 #
 # Icecast build stage (for later copy)
 #
-FROM ghcr.io/azuracast/icecast-kh-ac:latest AS icecast
+FROM ghcr.io/azuracast/icecast-kh-ac@sha256:751ae244cc8a06487edff350eed330e1bc08fee6e9a4c7edd9881360f44c303f AS icecast
 
 #
 # Common base image
