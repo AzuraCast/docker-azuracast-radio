@@ -39,8 +39,8 @@ RUN chmod a+x /ls_build/*.sh \
 #
 FROM base AS build_amd64
 
-COPY --from=liquidsoap_amd64 --chown=azuracast:azuracast /var/azuracast/.opam/4.12.0 /var/azuracast/.opam/4.12.0
-RUN ln -s /var/azuracast/.opam/4.12.0/bin/liquidsoap /usr/local/bin/liquidsoap
+COPY --from=liquidsoap_amd64 --chown=azuracast:azuracast /var/azuracast/.opam /var/azuracast/.opam
+RUN ln -s /var/azuracast/.opam/4.13.1/bin/liquidsoap /usr/local/bin/liquidsoap
 
 #
 # ARM64 Build Stage
