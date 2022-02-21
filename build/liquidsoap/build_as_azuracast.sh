@@ -5,8 +5,7 @@ set -x
 opam init --disable-sandboxing -a --bare && opam switch create 4.13.1
 
 # Pin specific commit of Liquidsoap
-opam pin add --no-action taglib https://github.com/savonet/ocaml-taglib.git#3b07fadf50e86e5da3aa64cb11b9117c36032d8f
-opam pin add --no-action liquidsoap https://github.com/savonet/liquidsoap.git#759a926b3febaaa48a852ae20f8ae29c83b40ba8
+opam pin add --no-action liquidsoap https://github.com/savonet/liquidsoap.git#af311dc8ee57e3e7d3f637ea23af4096fd57820d
 
 opam install -y ladspa.0.2.2 ffmpeg.1.1.1 ffmpeg-avutil.1.1.1 ffmpeg-avcodec.1.1.1 ffmpeg-avdevice.1.1.1 \
     ffmpeg-av.1.1.1 ffmpeg-avfilter.1.1.1 ffmpeg-swresample.1.1.1 ffmpeg-swscale.1.1.1 frei0r.0.1.2 \
@@ -17,10 +16,11 @@ opam install -y ladspa.0.2.2 ffmpeg.1.1.1 ffmpeg-avutil.1.1.1 ffmpeg-avcodec.1.1
 # Have Liquidsoap build its own chroot.
 mkdir -p /tmp/liquidsoap
 
-/var/azuracast/.opam/4.13.1/bin/liquidsoap /ls_build/liquidsoap/build_chroot.liq || true
+/var/azuracast/.opam/4.13.1/bin/liquidsoap /bd_build/liquidsoap/build_chroot.liq || true
 
 # Clear entire OPAM directory
 rm -rf /var/azuracast/.opam
 
 cp -r /tmp/liquidsoap/var/azuracast/.opam /var/azuracast/.opam
 rm -rf /tmp/liquidsoap
+
