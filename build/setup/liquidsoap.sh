@@ -20,6 +20,8 @@ if [ "$(uname -m)" = "aarch64" ]; then
     ARCHITECTURE=arm64
 fi
 
+# Adding this comment to trigger an uncached re-pull of this deb file.
+
 wget -O /tmp/liquidsoap.deb "https://github.com/savonet/liquidsoap/releases/download/v2.0.3/liquidsoap_2.0.3-ubuntu-focal-2_${ARCHITECTURE}.deb"
 
 dpkg -i /tmp/liquidsoap.deb
